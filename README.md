@@ -1,80 +1,80 @@
 # Firecrawl Web Scraper
 
-A powerful web scraping application built with Next.js and Firecrawl that allows you to scrape single pages or crawl entire websites.
+Next.jsとFirecrawlを使用した強力なWebスクレイピングアプリケーションです。単一ページのスクレイピングやWebサイト全体のクローリングが可能です。
 
-## Features
+## 機能
 
-- **Single Page Scraping**: Extract content from individual web pages
-- **Website Crawling**: Crawl multiple pages from a website
-- **Multiple Export Formats**: Export results as JSON, Markdown, or CSV
-- **Dark Mode Support**: Comfortable viewing in any lighting condition
-- **Error Handling**: Comprehensive error handling with user-friendly messages
-- **Loading States**: Visual feedback during scraping operations
+- **単一ページスクレイピング**: 個別のWebページからコンテンツを抽出
+- **Webサイトクローリング**: Webサイトの複数ページをクロール
+- **複数のエクスポート形式**: JSON、Markdown、CSV形式での結果エクスポート
+- **ダークモード対応**: あらゆる照明環境で快適な表示
+- **エラーハンドリング**: ユーザーフレンドリーなメッセージによる包括的なエラー処理
+- **ローディング状態**: スクレイピング操作中の視覚的フィードバック
 
-## Prerequisites
+## 前提条件
 
-Before running this application, you'll need:
+このアプリケーションを実行する前に、以下が必要です：
 
-1. Node.js (v18 or higher)
-2. A Firecrawl API key from [Firecrawl](https://www.firecrawl.dev/)
+1. Node.js (v18以上)
+2. [Firecrawl](https://www.firecrawl.dev/)のAPIキー
 
-## Getting Started
+## セットアップ
 
-1. Clone the repository:
+1. リポジトリをクローン:
 ```bash
-git clone [your-repo-url]
-cd firecrawl-app
+git clone https://github.com/kazu5150/Firecrawl-Next-App.git
+cd Firecrawl-Next-App
 ```
 
-2. Install dependencies:
+2. 依存関係をインストール:
 ```bash
 npm install
 ```
 
-3. Set up environment variables:
-Create a `.env.local` file in the root directory and add your Firecrawl API key:
+3. 環境変数を設定:
+ルートディレクトリに`.env.local`ファイルを作成し、FirecrawlのAPIキーを追加:
 ```
 FIRECRAWL_API_KEY=your_firecrawl_api_key_here
 ```
 
-4. Run the development server:
+4. 開発サーバーを起動:
 ```bash
 npm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. ブラウザで [http://localhost:3000](http://localhost:3000) を開く
 
-## Usage
+## 使用方法
 
-### Scraping a Single Page
+### 単一ページのスクレイピング
 
-1. Select "Scrape (Single Page)" mode
-2. Enter the URL you want to scrape
-3. Click "Start Scraping"
-4. View the results and export in your preferred format
+1. "Scrape (Single Page)"モードを選択
+2. スクレイピングしたいURLを入力
+3. "Start Scraping"をクリック
+4. 結果を確認し、お好みの形式でエクスポート
 
-### Crawling Multiple Pages
+### 複数ページのクローリング
 
-1. Select "Crawl (Multiple Pages)" mode
-2. Enter the starting URL for the crawl
-3. Click "Start Crawling"
-4. The app will crawl up to 10 pages by default
-5. Export all results in your preferred format
+1. "Crawl (Multiple Pages)"モードを選択
+2. クロールの開始URLを入力
+3. "Start Crawling"をクリック
+4. デフォルトで最大10ページをクロール
+5. すべての結果をお好みの形式でエクスポート
 
-## API Endpoints
+## APIエンドポイント
 
-- `POST /api/scrape` - Scrape a single URL
-- `POST /api/crawl` - Start crawling from a URL
-- `GET /api/crawl?jobId={id}` - Check crawl job status
+- `POST /api/scrape` - 単一URLのスクレイピング
+- `POST /api/crawl` - URLからのクローリング開始
+- `GET /api/crawl?jobId={id}` - クロールジョブのステータス確認
 
-## Tech Stack
+## 技術スタック
 
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **Firecrawl** - Web scraping engine
+- **Next.js 15** - App Routerを使用したReactフレームワーク
+- **TypeScript** - 型安全性
+- **Tailwind CSS** - スタイリング
+- **Firecrawl** - Webスクレイピングエンジン
 
-## Project Structure
+## プロジェクト構成
 
 ```
 firecrawl-app/
@@ -95,18 +95,18 @@ firecrawl-app/
 └── .env.local
 ```
 
-## Error Handling
+## エラーハンドリング
 
-The application handles various error scenarios:
-- Invalid or missing API keys
-- Rate limiting
-- Timeout errors
-- Network failures
+アプリケーションは以下のエラーシナリオに対応しています：
+- 無効または欠落したAPIキー
+- レート制限
+- タイムアウトエラー
+- ネットワーク障害
 
-## Contributing
+## 貢献
 
-Feel free to submit issues and pull requests.
+IssueやPull Requestはお気軽にお送りください。
 
-## License
+## ライセンス
 
 MIT
