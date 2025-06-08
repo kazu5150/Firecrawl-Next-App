@@ -1,103 +1,183 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { exportToJSON, exportToMarkdown, exportToCSV } from '@/lib/export';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState('');
+  const [mode, setMode] = useState<'scrape' | 'crawl'>('scrape');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setResult(null);
+
+    try {
+      const response = await fetch(`/api/${mode}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to process URL');
+      }
+
+      setResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen p-8 max-w-4xl mx-auto">
+      <h1 className="text-4xl font-bold mb-8 text-center">Firecrawl Web Scraper</h1>
+      
+      <div className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="mb-4 flex gap-4 justify-center">
+          <button
+            onClick={() => setMode('scrape')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              mode === 'scrape'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+            }`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Scrape (Single Page)
+          </button>
+          <button
+            onClick={() => setMode('crawl')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              mode === 'crawl'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+            }`}
           >
-            Read our docs
-          </a>
+            Crawl (Multiple Pages)
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="url" className="block text-sm font-medium mb-2">
+              Enter URL to {mode === 'scrape' ? 'scrape' : 'crawl'}:
+            </label>
+            <input
+              id="url"
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://example.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600"
+              required
+            />
+          </div>
+          
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          >
+            {loading ? 'Processing...' : `Start ${mode === 'scrape' ? 'Scraping' : 'Crawling'}`}
+          </button>
+        </form>
+
+        {error && (
+          <div className="mt-4 p-4 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300">
+            {error}
+          </div>
+        )}
+        
+        {loading && (
+          <div className="mt-8 flex justify-center">
+            <LoadingSpinner />
+          </div>
+        )}
+      </div>
+
+      {result && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold">Results</h2>
+            <div className="flex gap-2">
+              <button
+                onClick={() => exportToJSON(mode === 'scrape' ? result.data : result.data.data)}
+                className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+              >
+                Export JSON
+              </button>
+              <button
+                onClick={() => exportToMarkdown(mode === 'scrape' ? result.data : result.data.data)}
+                className="px-3 py-1 text-sm bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
+              >
+                Export Markdown
+              </button>
+              <button
+                onClick={() => exportToCSV(mode === 'scrape' ? result.data : result.data.data)}
+                className="px-3 py-1 text-sm bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors"
+              >
+                Export CSV
+              </button>
+            </div>
+          </div>
+          
+          {result.data && (
+            <div className="space-y-4">
+              {mode === 'scrape' ? (
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <h3 className="font-semibold mb-2">{result.data.metadata?.title || 'Untitled'}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    {result.data.metadata?.description || 'No description available'}
+                  </p>
+                  <details className="mt-4">
+                    <summary className="cursor-pointer text-blue-500 hover:underline">
+                      View content
+                    </summary>
+                    <pre className="mt-2 p-4 bg-gray-100 dark:bg-gray-900 rounded overflow-x-auto text-sm">
+                      {result.data.markdown || result.data.content || 'No content available'}
+                    </pre>
+                  </details>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Status: {result.data.status || 'Processing'}
+                  </p>
+                  {result.data.data && result.data.data.map((page: any, index: number) => (
+                    <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                      <h3 className="font-semibold mb-2">
+                        {page.metadata?.title || `Page ${index + 1}`}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        {page.metadata?.sourceURL || page.url}
+                      </p>
+                      <details className="mt-2">
+                        <summary className="cursor-pointer text-blue-500 hover:underline">
+                          View content
+                        </summary>
+                        <pre className="mt-2 p-4 bg-gray-100 dark:bg-gray-900 rounded overflow-x-auto text-sm">
+                          {page.markdown || page.content || 'No content available'}
+                        </pre>
+                      </details>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </main>
   );
 }
